@@ -1,0 +1,11 @@
+*.log
+*.out
+*.pkl
+data/boy/
+data/girl/
+data/cat/
+data/car/
+data/dog/
+.DS_Store
+*/.ipynb_checkpoints/
+*/__pycache__/
