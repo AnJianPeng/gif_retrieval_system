@@ -18,4 +18,5 @@ dependencies:
 - django
 - pip:
   - visdom
+  - django-redis
 - pyyaml
