@@ -15,6 +15,7 @@ dependencies:
 - torchvision
 - pip
 - pillow
+- django
 - pip:
   - visdom
 - pyyaml
