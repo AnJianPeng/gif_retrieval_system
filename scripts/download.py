@@ -18,7 +18,7 @@ data_path = osp.join('..','data')
 csv_path = osp.join(data_path, 'csv')
 csv_files = glob(osp.join(csv_path, '*.csv'))
 relation_file = osp.join(data_path, 'relation.pkl')
-limit_each_category = 1000
+limit_each_category = 3000
 
 def create_download_task(url, file_name):
     # download the csv to the file system

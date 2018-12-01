@@ -88,10 +88,11 @@ dependencies:
 - scipy
 - pyyaml
 - pillow
+- django
 - pip:
   - ipython-genutils==0.2.0
   - jupyter-client==5.1.0
   - jupyter-console==5.2.0
   - jupyter-core==4.3.0
   - prompt-toolkit==1.0.15
-
+  - django-redis=4.10.0
