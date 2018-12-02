@@ -10,6 +10,11 @@ conda environment create -f environment_mac.yml
 conda environment update -f environment_mac.yml
 ```
 
+## apply new environment
+```shell
+source activate gif_retrieval
+```
+
 # How to run the Django server
 - Change your working directory to *src/retrieval*
 - run `python manage.py runserver`
