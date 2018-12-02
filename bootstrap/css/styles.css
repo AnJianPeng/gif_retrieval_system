@@ -23,13 +23,14 @@
 }
 
 h1 {
-	color:white;
+	color: white;
+	font-size: 30px;
 }
 
 h2 {
 	color: gray;
 	padding: 20px, 0px, 10px, 0px;
-	font-size: 26px;
+	font-size: 22px;
 }
 
 h3 {
