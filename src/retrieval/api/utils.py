@@ -12,7 +12,7 @@ def get_redis_key(model_object):
         str(getattr(model_object, model_object._meta.pk.name))
 
 def load_gif_gray(image):
-    im = Image.open(path)
+    im = Image.open(image)
     ret = np.array(im.convert('L'))
     return ret
 

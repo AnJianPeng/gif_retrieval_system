@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core.cache import cache
 from django_redis import get_redis_connection
 from django.views.decorators.csrf import csrf_exempt
@@ -64,6 +64,16 @@ def update_vocab_tree(request):
 def update_images(request):
     if request.method == 'POST':
         csv_file = request.FILES['images.csv']
-        csv_data = csv_file.read().decode('base64')
+        csv_data = codecs.decode(csv_file.read(), 'utf-8')
         sv.update_images(csv_data)
+    return HttpResponse()
+
+@csrf_exempt
+def sample_query(request):
+    if request.method == 'POST':
+        gif_file = request.FILES['query.gif']
+        gif_data = gif_file.read()
+        images = sv.sample_query(gif_data)
+        images = [image.as_dict() for image in images]
+        return JsonResponse(images, safe=False)
     return HttpResponse()

@@ -7,6 +7,12 @@ class Image(models.Model):
     url = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
 
+    def as_dict(self):
+        return dict(
+                image_id=self.image_id,
+                url=self.url,
+                description=self.description)
+
 class VocabTreeNode(models.Model):
     node_id = models.IntegerField(default=1, primary_key=True)
     _children_ids = models.BinaryField()
