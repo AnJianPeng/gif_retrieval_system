@@ -41,11 +41,11 @@
 
     <div class="container">
         <div class="row row-content align-items-center">
-            <div class="col-12 col-md-10">
+            <div class="col-12 col-md-8">
                 <h2>Explore GIFs ...</h2>
                 <form>
                     <div class="form-group row">
-                        <div class="col-md-10">
+                        <div class="col-md">
                             <input type="text" class="form-control" id="search" name="search"
                             placeholder="Search">
                         </div>
@@ -53,8 +53,24 @@
                 </form>
             </div>
             <div class="col-12 col-md">
+                <p></p>
+                <button class="btn" onclick="showResult()"><i class="fa fa-search fa-lg"></i></button>
             </div>
+            <div class="col-12 col-md">
+                <p></p>
+                <button class="btn" onclick="clearResult()"><i class="fa fa-times fa-lg"></i></button></button>
+            </div>
+            
         </div>
+    </div>
+
+    <div class="container">
+        <ul class="list-group">
+            <li class="list-group-item"><img src="/img/carComing.gif"></li>
+            <li class="list-group-item"><img src="/img/carDrifting.gif"></li>
+            <li class="list-group-item"><img src="/img/carSpining.gif"></li>
+            <li class="list-group-item"><img src="/img/carDrifting2.gif"></li>
+        </ul>
     </div>
 
     <footer class="footer">
