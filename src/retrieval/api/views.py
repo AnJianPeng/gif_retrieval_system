@@ -77,3 +77,6 @@ def sample_query(request):
         images = [image.as_dict() for image in images]
         return JsonResponse(images, safe=False)
     return HttpResponse()
+
+def text_query(request):
+    pass
