@@ -18,13 +18,30 @@
 <body>
     <nav class="navbar navbar-dark navbar-expand-sm fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="#"><img src="img/AniGIF_brand.png" class="img-rounded" alt="AniGIF logo" height="30" width="85%"></a>
+            <a class="navbar-brand" href="#"><img src="img/AniGIF_brand.png" class="img-rounded" alt="AniGIF logo" height="30" width="40"></a>
                 <ul class="navbar-nav mr-auto">
                     <li class="navbar-item active"><a class="nav-link" href="#"><span class="fa fa-search fa-lg"></span>Search</a></li>
                     <li class="navbar-item"><a class="nav-link" href="./about.html"><span class="fa fa-info fa-lg"></span>About</a></li>
                 </ul>
         </div>
     </nav>
+
+    <!--Bootstrap suggests all modal-related code shuold be placed at top of page-->
+    <div id="uploadModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg" role="content">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Search by GIF</h3>
+                    <button type="button" class="close" data-dismiss="modal"><span class="fa fa-times"></span></button>
+                </div>
+                <div class="modal-body">
+                    <h4>Please upload a GIF</h4>
+                    <input id="gif-file" type="file"/>
+                    <button onclick="showResult()" class="close" id="ok" data-dismiss="modal"><i class="fa fa-check-circle fa-lg"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <header>
         <div class="jumbotron">
@@ -40,24 +57,22 @@
     </header>
 
     <div class="container">
+        <p></p>
+        <h2>Explore GIFs ...</h2>
         <div class="row row-content align-items-center">
-            <div class="col-10 col-md-8">
-                <h2>Explore GIFs ...</h2>
-                <form>
-                    <div class="form-group row">
-                        <div class="col-md">
-                            <input type="text" class="form-control" id="search" name="search"
-                            placeholder="Search">
-                        </div>
+            <div class="col-8 col-md-8 mr-auto">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="textSearch" name="search" placeholder="Search">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" data-toggle="modal" data-target="#uploadModal"><i class="fa fa-camera fa-xs"></i></button>
                     </div>
-                </form>
+                </div>
             </div>
-            <div class="col-1 col-md-1">
-                <p></p>
+
+            <div class="col-1 col-md-1 ml-auto">
                 <button id="searchBtn" class="btn" onclick="showResult()"><i class="fa fa-search fa-lg"></i></button>
             </div>
-            <div class="col-1 col-md-1">
-                <p></p>
+            <div class="col-1 col-md-1 mr-auto">
                 <button class="btn" onclick="clearResult()"><i class="fa fa-times fa-lg"></i></button></button>
             </div>
             
@@ -68,30 +83,40 @@
     <div class="container">
         <div class="row row-content align-items-center">
             <div class="col-6 col-md-4 ml-auto">
-                <img src="/img/carComing.gif" alt="car coming" height="70%" width="70%" class="img-thumbnail">
+                <div class="thumbnail">
+                    <!--img class="img-thumbnail"-->
+                </div>
             </div>
             <div class="col-6 col-md-4 mr-auto">
-                <img src="/img/carDrifting.gif" alt="car drifting" height="70%" width="70%" class="img-thumbnail">
+                <div class="thumbnail">
+                    <!--img class="img-thumbnail"-->
+                </div>
             </div>
             <div class="col-6 col-md-4 mr-auto">
-                <img src="/img/carSpining.gif" alt="car spining" height="70%" width="70%" class="img-thumbnail">
+                <div class="thumbnail">
+                    <!--img class="img-thumbnail"-->
+                </div>
             </div>
         </div>
+        <p></p>
         <div class="row row-content align-items-center">
             <div class="col-6 col-md-4 ml-auto">
-                <img src="/img/carComing2.gif" alt="car coming" height="70%" width="70%" class="img-thumbnail">
+                <div class="thumbnail">
+                    <!--img class="img-thumbnail"-->
+                </div>
             </div>
             <div class="col-6 col-md-4 mr-auto">
-                <img src="/img/carSwinging.gif" alt="car drifting" height="70%" width="70%" class="img-thumbnail">
+                <div class="thumbnail">
+                    <!--img class="img-thumbnail"-->
+                </div>
             </div>
             <div class="col-6 col-md-4 mr-auto">
-                <img src="/img/carDrifting2.gif" alt="car spining" height="70%" width="70%" class="img-thumbnail">
+                <div class="thumbnail">
+                    <!--img class="img-thumbnail"-->
+                </div>
             </div>
         </div>
-        <div class="row row-content">
-            <div class="col-12">
-            </div>
-        </div>
+        <p></p>
     </div>
 
     <footer class="footer">
@@ -127,11 +152,11 @@
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="js/searchEvent.js"></script>
     <script>
-        document.getElementById("search").addEventListener("keyup", function(event) {
+        document.getElementById("textSearch").addEventListener("keyup", function(event) {
             event.preventDefault();
-            console.log("Hello from listener");
-            console.log(event.keyCode);
-            if (event.keyCode === 73) {
+            //console.log("Hello from listener");
+            //console.log(event.keyCode);
+            if (event.keyCode === 13) {
                 console.log("Enter-click");
                 document.getElementById("searchBtn").click();
             }

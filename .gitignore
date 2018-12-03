@@ -10,3 +10,4 @@ data/dog/
 .ipynb_checkpoints/
 __pycache__/
 .pyc
+.idea

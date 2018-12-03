@@ -79,4 +79,4 @@ def sample_query(request):
     return HttpResponse()
 
 def text_query(request):
-    pass
+    return JsonResponse([{'description': ' a boy is happy parking and see another boy', 'image_id': '11', 'url': ' https://38.media.tumblr.com/9e6fcb37722bf01996209bdf76708559/tumblr_np9xo74UgD1ux4g5vo1_250.gif'}, {'description': ' a monkey is playing with a dog near water', 'image_id': '41257', 'url': ' https://38.media.tumblr.com/51525bdb75d50b0b77e005513a1858aa/tumblr_nbgaxiTgDz1slj978o1_400.gif'}], safe=False)
