@@ -1,14 +1,15 @@
 import cv2
 import numpy as np
 import pickle
-from utils import load_gif, load_gif_gray
+from utils import load_gif_gray
 import cyvlfeat as vlfeat
 import sklearn.metrics.pairwise as sklearn_pairwise
 from sklearn.svm import LinearSVC
+import os.path as osp
 
 debugging_flag=True
 
-def build_vocabulary(image_paths, vocab_size):
+def build_vocabulary(image_paths, vocab_size, sampled_file='sampled_descriptors.pkl'):
     """
     This function will sample SIFT descriptors from the training images,
     cluster them with kmeans, and then return the cluster centers.
@@ -18,24 +19,32 @@ def build_vocabulary(image_paths, vocab_size):
     
     N = len(image_paths)
     assert N > 0, 'there must be at least one image path!'
+
+    if not osp.exists(sampled_file):   
+        # smapled features
+        before_clustered = 1000000
+        sampled_features = np.empty((before_clustered, dim))
+        count, visited = 0, 0
+        while count < before_clustered and visited < N:
+            index = np.random.randint(N)
+            img = load_gif_gray(image_paths[index])
+
+            frames, descriptors = vlfeat.sift.dsift(img, fast=debugging_flag, step=20)
+            added_num = min(before_clustered-count, descriptors.shape[0])
+            sampled_features[count:count+added_num, :] = descriptors[:added_num, :]
+
+            count = count + added_num
+            visited = visited + 1
+
+        print('use {:d} images to extract the visual words'.format(visited))
+
+        with open(sampled_file, 'wb') as f:
+            pickle.dump(sampled_features, f)
+    else:
+        print('use saved sampled descriptor file')
+        with open(sampled_file, 'rb') as f:
+            sampled_features = pickle.load(f)
     
-    # smapled features
-    before_clustered = 800000
-    sampled_features = np.empty((before_clustered, dim))
-    count, visited = 0, 0
-    while count < before_clustered:
-        index = np.random.randint(N)
-        img = load_gif_gray(image_paths[index])
-        
-        frames, descriptors = vlfeat.sift.dsift(img, fast=debugging_flag, step=30)
-        added_num = min(before_clustered-count, descriptors.shape[0])
-        sampled_features[count:count+added_num, :] = descriptors[:added_num, :]
-        
-        count = count + added_num
-        visited = visited + 1
-    
-    print('use {:d} images to extract the visual words'.format(visited))
-    print(visited)
     # clustering
     vocab = vlfeat.kmeans.kmeans(sampled_features, vocab_size)
     return vocab
@@ -55,8 +64,8 @@ def get_bags_of_sifts(image_paths, vocab_filename, frame='start'):
     images_per_cluster = 5000 # calc the kmeans_quantize for multiple images once
     count = 0
     for i in range(N):
-        img = load_gif_gray(image_paths[i], frame)
-        frames, descriptors = vlfeat.sift.dsift(img, fast=debugging_flag, step=10)
+        img = load_gif_gray(image_paths[i])
+        frames, descriptors = vlfeat.sift.dsift(img, fast=debugging_flag, step=5)
         descriptors = descriptors.astype(np.float64)
         
         list_descriptors.append(descriptors)
@@ -75,7 +84,7 @@ def get_bags_of_sifts(image_paths, vocab_filename, frame='start'):
             
             # histogram
             for assign in splited_assignments:
-                values, bins = np.histogram(assign, bins=np.arange(vocab_size+1), density=True)
+                values, bins = np.histogram(assign, bins=np.arange(vocab_size+1))
                 feats[count, :] = values
                 count = count + 1
             
@@ -85,13 +94,10 @@ def get_bags_of_sifts(image_paths, vocab_filename, frame='start'):
     return feats
 
 def nearest_neighbor_classify(train_image_feats, test_image_feats,
-    metric='euclidean'):
+    metric='cosine'):
 
     # compute the distances
-    if metric == 'euclidean':
-        pair_distances = sklearn_pairwise.pairwise_distances(test_image_feats, train_image_feats)
-    else:
-        pair_distances = sklearn_pairwise.pairwise_distances(test_image_feats, train_image_feats)
+    pair_distances = sklearn_pairwise.pairwise_distances(test_image_feats, train_image_feats, metric=metric)
         
     # find the nearest neighbour classifier
     indexs = np.argsort(pair_distances, axis=1)
@@ -152,3 +158,27 @@ def svm_classify(train_image_feats, train_labels, test_image_feats, SVM_lambda=4
     test_labels = [categories[i] for i in label_indexs]
 
     return test_labels, svms
+
+"""
+term frequency-inverse document frequency
+"""
+def tf_idf(feats):
+    N = feats.shape[0]
+    word_frequency = feats/np.sum(feats, axis=1).reshape(-1, 1)
+    inverse_document_frequency = np.log(N/np.sum((feats>0).astype(int), axis=0))
+    
+    return word_frequency * inverse_document_frequency
+
+def rank(predict_indexs, y, Nrel):
+    N = predict_indexs.shape[1]
+    M = predict_indexs.shape[0]
+    factor = Nrel*(Nrel+1)/2
+    ranks = []
+    for i in range(M):
+        predict_index = predict_indexs[i, :]
+        label = y[i]
+        relevant = (y[predict_index] == label).astype(int)
+        r_sum = np.sum(np.argsort(relevant)[-Nrel:])+Nrel
+        ranks.append((r_sum-factor)/(N*Nrel))
+    
+    return np.array(ranks)
