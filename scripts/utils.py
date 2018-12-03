@@ -6,7 +6,10 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from sklearn.metrics import confusion_matrix
 
-def load_gif_gray(path):
+"""
+return all gif frames as a Python list
+"""
+def load_gif(path):
     im = Image.open(path)
     n_frames = im.n_frames
     count = 0
@@ -17,24 +20,18 @@ def load_gif_gray(path):
         imframe = im.copy()
         if count == 0:
             palette = imframe.getpalette()
-        else:
+        elif count <= n_frames // 2:
             imframe.putpalette(palette)
             
         # add the interesting frames
-        if count == 0:
-            ret.append(imframe)
-        elif count == n_frames // 2:
-            ret.append(imframe)
-        elif count == n_frames // 4:
-            ret.append(imframe)
-        elif count == n_frames * 3 // 4:
-            ret.append(imframe)
-        elif count == n_frames-1:
-            ret.append(imframe)
+        ret.append(imframe)
         
         count = count+1
-    # convert to gray
-    ret = [np.array(imframe.convert('L')) for imframe in ret]
+    return ret
+
+def load_gif_gray(path):
+    im = Image.open(path)
+    ret = np.array(im.convert('L'))
     return ret
 
 def get_image_directories(data_path, categories):
@@ -46,13 +43,30 @@ def load_images_paths(limit_each_category, paths):
     """
     image_paths = []
     image_labels = []
+    image_ids = []
     for path in paths:
         category = osp.split(path)[-1]
         files = glob(osp.join(path, '*.gif'))[:limit_each_category]
         image_paths.extend(files)
         image_labels.extend([category]*len(files))
+    image_ids = [osp.split(image_path)[-1].split('.')[0] for image_path in image_paths]
     
-    return image_paths, image_labels
+    return image_paths, image_labels, image_ids
+
+def load_agument_image_paths(agument_path, image_paths, bases):
+    agument_paths = []
+    agument_labels = []
+    agument_ids = []
+    for image_path in image_paths:
+        category = osp.split(osp.split(image_path)[-2])[-1]
+        image_name = osp.split(image_path)[-1]
+        for base in bases:
+            target_path = osp.join(agument_path, category, str(base) + '_' + image_name)
+            if osp.exists(target_path):
+                agument_paths.append(target_path)
+                agument_labels.append(category)
+                agument_ids.append(image_name.split('.')[0])
+    return agument_paths, agument_labels, agument_ids
 
 def show_results(train_image_paths, test_image_paths, train_labels, test_labels,
     categories, abbr_categories, predicted_categories):

@@ -70,4 +70,13 @@ def update_images(request):
 
 @csrf_exempt
 def sample_query(request):
+    if request.method == 'POST':
+        gif_file = request.FILES['query.gif']
+        gif_data = gif_file.read()
+        images = sv.sample_query(gif_data)
+        images = [image.as_dict() for image in images]
+        return JsonResponse(images, safe=False)
+    return HttpResponse()
+
+def text_query(request):
     return JsonResponse([{'description': ' a boy is happy parking and see another boy', 'image_id': '11', 'url': ' https://38.media.tumblr.com/9e6fcb37722bf01996209bdf76708559/tumblr_np9xo74UgD1ux4g5vo1_250.gif'}, {'description': ' a monkey is playing with a dog near water', 'image_id': '41257', 'url': ' https://38.media.tumblr.com/51525bdb75d50b0b77e005513a1858aa/tumblr_nbgaxiTgDz1slj978o1_400.gif'}], safe=False)
