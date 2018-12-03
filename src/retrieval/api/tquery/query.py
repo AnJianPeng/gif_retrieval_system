@@ -56,9 +56,12 @@ def run(trie, query):
     parsed_dict = json.loads(parsed_str)
     lemma_list = [v for d in parsed_dict['sentences'][0]['tokens'] for k, v in d.items() if k == 'lemma']
     filtered_lemmas = [w for w in lemma_list if not w in stop_words]
-    if m != None: # AND pattern
+    if m != None:  # AND pattern
         return multiple_key_intersect_query(trie, filtered_lemmas)
     else:
+        if len(filtered_lemmas) == 0:
+            import random
+            return [i for i in random.shuffle(trie.get_posting_list('boy')[1].get_list())][0:32]
         return union_rank_query(trie, filtered_lemmas)
 
 def union_rank_query(trie, words):
@@ -83,8 +86,8 @@ def multiple_key_intersect_query(trie, words):
         if s == 0:
             # word not found
             return []
+        plist.init_pointer()
         plists.append(plist)
-
     return comp_intersection(plists)
 
 data_path = osp.join(osp.join('..', '..'), 'data')
