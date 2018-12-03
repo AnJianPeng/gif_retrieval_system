@@ -1,7 +1,6 @@
 import json
 import math
-from nltk.corpus import stopwords
-from stanfordcorenlp import StanfordCoreNLP
+import re
 
 def fetchData(fprefix):
     desc = []
@@ -34,8 +33,9 @@ def build(desc):
 
     for record in desc:
         description = record[1]
-        gid = record[0]
+        gid = int(record[0])
         # Normalization
+        description = re.sub("[\+\.\!\/_,~@#$%^*\(\)\"\[\]0-9]+", "", description)
         parsed_str = nlp.annotate(description, properties=props)
         parsed_dict = json.loads(parsed_str)
         lemma_list = [v for d in parsed_dict['sentences'][0]['tokens'] for k, v in d.items() if k == 'lemma']
@@ -62,8 +62,8 @@ def saveLemmatizedDescription(lemmatized_desc, fpath):
 def saveIndexes(iindex, dfreq, n, fpath):
     dfile = open(fpath, 'w')
     for lemma in iindex:
-        sorted(iindex[lemma])
-        dfile.write(lemma + '\t' + str(math.log(n/dfreq[lemma], 10)) + '\t' + ','.join(iindex[lemma]) + '\n')
+        plist = [str(i) for i in sorted([j for j in set(iindex[lemma])])]
+        dfile.write(lemma + '\t' + str(math.log(n/dfreq[lemma], 10)) + '\t' + ','.join(plist) + '\n')
     dfile.close()
 
 def writeIndexesToRedis(): #todo

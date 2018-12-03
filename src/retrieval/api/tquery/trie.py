@@ -1,4 +1,4 @@
-import tretrieval.skip_list as sl
+import tquery.skip_list as sl
 
 class TrieNode:
     valid = False
@@ -27,7 +27,7 @@ class Trie:
             elif not current.child[next_id].valid:
                 current.child[next_id].valid = True
             current = current.child[next_id]
-        current.idf_based_score = score
+        current.idf_based_score = float(score)
         current.posting_list = sl.SkipList(posting_list)
 
     def get_posting_list(self, word):
@@ -47,28 +47,29 @@ class Trie:
         for word, score, plist in w_s_p_tuple_list:
             self.add_word(word, score, plist)
 
-    def build(self, w_s_p_tuple_list, score_assign):
+    def build2(self, w_s_p_tuple_list, score_assign):
         for word, score, plist in w_s_p_tuple_list:
             if word in score_assign:
                 score = score_assign[word]
             self.add_word(word, score, plist)
 
 
-if __name__ == '__main__':
-    # read inverted-lists from file and construct a (w, s, plist) tuple list
-    def readin_inverted_index(path):
-        tuple_list = []
-        i_file = open(path, 'r')
-        data = i_file.read().split('\n')
-        i_file.close()
-        for line in data:
-            if len(line) == 0:
-                continue
-            w, s, plist = line.split('\t')
-            plist = plist.split(',')
-            tuple_list.append((w, s, plist))
-        return tuple_list
+# read inverted-lists from file and construct a (w, s, plist) tuple list
+def readin_inverted_index(path):
+    tuple_list = []
+    i_file = open(path, 'r')
+    data = i_file.read().split('\n')
+    i_file.close()
+    for line in data:
+        if len(line) == 0:
+            continue
+        w, s, plist = line.split('\t')
+        plist = [int(i) for i in plist.split(',')]
+        tuple_list.append((w, s, plist))
+    return tuple_list
 
+
+if __name__ == '__main__':
     def test_trie_build(tuples):
         trie = Trie()
         trie.build(tuples)
