@@ -8,23 +8,12 @@ import numpy as np
 from api.models import *
 from api.utils import get_redis_key, PickledRedis
 import api.services as sv
+import api.tquery.query as tq
 
 import json
 import os.path as osp
 import pickle
 import codecs
-
-def index(request):
-    image = Image(image_id='1', url='https://38.media.tumblr.com/9e6fcb37722bf01996209bdf76708559/tumblr_np9xo74UgD1ux4g5vo1_250.gif', description='a boy is happy parking and see another boy')
-    cache.set(image.get_key(), image)
-    image = cache.get('image_1')   
-    return HttpResponse(image.url)
-
-def list_all(request):
-    tree_node = VocabTreeNode(node_id=13, children_ids=[2,3], descriptor=np.array([1,23]))
-    cache.set(get_redis_key(tree_node), tree_node)
-    node = cache.get(get_redis_key(tree_node))
-    return HttpResponse(node.descriptor.shape)
 
 @csrf_exempt
 def update_vocab_tree(request):
@@ -79,4 +68,7 @@ def sample_query(request):
     return HttpResponse()
 
 def text_query(request):
-    return JsonResponse([{'description': ' a boy is happy parking and see another boy', 'image_id': '11', 'url': ' https://38.media.tumblr.com/9e6fcb37722bf01996209bdf76708559/tumblr_np9xo74UgD1ux4g5vo1_250.gif'}, {'description': ' a monkey is playing with a dog near water', 'image_id': '41257', 'url': ' https://38.media.tumblr.com/51525bdb75d50b0b77e005513a1858aa/tumblr_nbgaxiTgDz1slj978o1_400.gif'}], safe=False)
+    image_ids = tq.run(tq.trie, request.GET['key'])
+    images = [sv.get_image_local(image_id).as_dict() for image_id in image_ids]
+    return JsonResponse(images, safe=False)
+    

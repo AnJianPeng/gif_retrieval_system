@@ -1,4 +1,4 @@
-import tquery.skip_list as sl
+import api.tquery.skip_list as sl
 
 class TrieNode:
     valid = False

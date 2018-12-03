@@ -1,10 +1,11 @@
 import json
 import re
+import os.path as osp
 from nltk.corpus import stopwords
 from stanfordcorenlp import StanfordCoreNLP
 
-import tquery.skip_list as sl
-import tquery.trie as tr
+import api.tquery.skip_list as sl
+import api.tquery.trie as tr
 
 '''
 Deal with various queries
@@ -86,20 +87,6 @@ def multiple_key_intersect_query(trie, words):
 
     return comp_intersection(plists)
 
-
-if __name__ == '__main__':
-    def test_comp_intersection():
-        postings = [[1,2,4,6,8,11,12,19,23,33,34,37,51], [1,3,4,5,11,13,17,19,23,24,25,35,36,37,51,52,67], [1,3,4,9,11,16,18,19,22,24,25,37,42,48,51,52,89]]
-        lists = [sl.SkipList(i) for i in postings]
-        print(comp_intersection(lists))
-
-    def test_query():
-        trie = tr.Trie()
-        trie.build(tr.readin_inverted_index("/Users/fangwang/Documents/CSE@GT/System/CS6400_DS_Concepts_&_Design/Project/gif_retrieval_system/data/inverted_index_1203"))
-        q = input('Input Query:\n')
-        while q != "QUIT":
-            print(run(trie, q))
-            print('=============')
-            q = input('Input Query:\n')
-
-    test_query()
+data_path = osp.join(osp.join('..', '..'), 'data')
+trie = tr.Trie()
+trie.build(tr.readin_inverted_index(osp.join(data_path, 'inverted_index_1203')))
