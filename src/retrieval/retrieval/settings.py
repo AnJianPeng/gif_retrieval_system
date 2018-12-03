@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'retrieval.wsgi.application'
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://13.230.186.159:6379/1",
+        "LOCATION": "redis://127.0.0.1:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "PICKLE_VERSION": -1    # use the latest protocol version
@@ -131,5 +131,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+    '../../bootstrap',
+    '../../data/boy/',
+    '../../data/cat/',
+    '../../data/car/',
+    '../../data/dog/',
+    '../../data/girl/',
+    '../../data/agument/boy',
+    '../../data/agument/cat',
+    '../../data/agument/car',
+    '../../data/agument/dog',
+    '../../data/agument/girl'
+]
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = None

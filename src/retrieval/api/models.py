@@ -15,8 +15,8 @@ class Image(models.Model):
 
 class VocabTreeNode(models.Model):
     node_id = models.IntegerField(default=1, primary_key=True)
-    _children_ids = models.BinaryField()
-    _descriptor = models.BinaryField()
+    children_ids = models.BinaryField()
+    descriptor = models.BinaryField()
 
     def set_children_ids(self, data):
         self._children_ids = pickle.dumps(data)
