@@ -60,9 +60,9 @@ def update_images(request):
 @csrf_exempt
 def sample_query(request):
     if request.method == 'POST':
-        gif_file = request.FILES['query.gif']
-        gif_data = gif_file.read()
-        images = sv.sample_query(gif_data)
+        f = open('test.png', 'rb')
+        print('Start')
+        images = sv.sample_query(f, False)
         images = [image.as_dict() for image in images]
         return JsonResponse(images, safe=False)
     return HttpResponse()

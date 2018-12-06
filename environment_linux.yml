@@ -96,3 +96,6 @@ dependencies:
   - jupyter-core==4.3.0
   - prompt-toolkit==1.0.15
   - django-redis==4.10.0
+  - nltk==3.3.0
+  - stanfordcorenlp==3.3.9
+

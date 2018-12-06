@@ -37,7 +37,7 @@
                 <div class="modal-body">
                     <h4>Please upload a GIF</h4>
                     <input id="gif-file" type="file"/>
-                    <button onclick="showResult()" class="close" id="ok" data-dismiss="modal"><i class="fa fa-check-circle fa-lg"></i></button>
+                    <button onclick="gifSearch()" class="close" id="ok" data-dismiss="modal"><i class="fa fa-check-circle fa-lg"></i></button>
                 </div>
             </div>
         </div>
@@ -70,7 +70,7 @@
             </div>
 
             <div class="col-1 col-md-1 ml-auto">
-                <button id="searchBtn" class="btn" onclick="showResult()"><i class="fa fa-search fa-lg"></i></button>
+                <button id="searchBtn" class="btn" onclick="textSearch()"><i class="fa fa-search fa-lg"></i></button>
             </div>
             <div class="col-1 col-md-1 mr-auto">
                 <button class="btn" onclick="clearResult()"><i class="fa fa-times fa-lg"></i></button></button>
@@ -147,7 +147,7 @@
         </div>
     </footer>
     <!-- jQuery first, then Popper.js, then Bootstrap JS. -->
-    <script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="js/searchEvent.js"></script>

@@ -132,12 +132,11 @@ def weight(leafID, N):
 '''
 return: list of Image
 '''
-def sample_query(query_image):
+def sample_query(query_image, augmented):
     global image_indexs
     N = len(image_indexs) # assume that the image amout in the db is 5000
     q = {}
-    f = BytesIO(query_image)
-    img = load_gif_gray(f)
+    img = load_gif_gray(query_image)
     kp, des = vlfeat.sift.dsift(img, fast=True, step=5)
     start = time.time()
     for d in des:
@@ -158,6 +157,8 @@ def sample_query(query_image):
     for leaf_node_id in q:
         possible_image_ids.extend(invert_indexs[leaf_node_id].keys())
     possible_image_ids = set(possible_image_ids)
+    if not augmented:
+        possible_image_ids = [image_id for image_id in possible_image_ids if '_' not in image_id]
     print(len(possible_image_ids))
     scores = getScores(q, N, possible_image_ids, 10)
     end = time.time()
